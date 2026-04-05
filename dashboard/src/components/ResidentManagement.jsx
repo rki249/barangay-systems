@@ -1,0 +1,68 @@
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+
+function ResidentManagement() {
+  const navigate = useNavigate();
+  const [residents, setResidents] = useState([]);
+  const [form, setForm] = useState({ full_name: "", age: "", gender: "", household_id: "" });
+
+  const fetchResidents = async () => {
+    try {
+      const res = await axios.get("http://localhost:5000/api/residents");
+      setResidents(res.data);
+    } catch (err) { console.error(err); }
+  };
+
+  useEffect(() => { fetchResidents(); }, []);
+
+  const handleInput = (e) => setForm({ ...form, [e.target.name]: e.target.value });
+
+  const addResident = async () => {
+    try {
+      await axios.post("http://localhost:5000/api/residents", form);
+      setForm({ full_name: "", age: "", gender: "", household_id: "" });
+      fetchResidents();
+    } catch (err) { console.error(err); }
+  };
+
+  const deleteResident = async (id) => {
+    try {
+      await axios.delete(`http://localhost:5000/api/residents/${id}`);
+      fetchResidents();
+    } catch (err) { console.error(err); }
+  };
+
+  return (
+    <div>
+      <h2>Resident Management</h2>
+      <table border="1">
+        <thead><tr><th>ID</th><th>Name</th><th>Age</th><th>Gender</th><th>Household ID</th><th>Action</th></tr></thead>
+        <tbody>
+          {residents.map(r => (
+            <tr key={r.resident_id}>
+              <td>{r.resident_id}</td>
+              <td>{r.full_name}</td>
+              <td>{r.age}</td>
+              <td>{r.gender}</td>
+              <td>{r.household_id}</td>
+              <td><button onClick={() => deleteResident(r.resident_id)}>Delete</button></td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+
+      <h3>Add Resident</h3>
+      <input name="full_name" placeholder="Full Name" value={form.full_name} onChange={handleInput} />
+      <input name="age" placeholder="Age" value={form.age} onChange={handleInput} />
+      <input name="gender" placeholder="Gender" value={form.gender} onChange={handleInput} />
+      <input name="household_id" placeholder="Household ID" value={form.household_id} onChange={handleInput} />
+      <button onClick={addResident}>Add Resident</button>
+
+      <br /><br />
+      <button onClick={() => navigate("/dashboard")}>Back to Dashboard</button>
+    </div>
+  );
+}
+
+export default ResidentManagement;
