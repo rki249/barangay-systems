@@ -1,0 +1,94 @@
+/* Container */
+.blotter-container {
+  max-width: 1000px;
+  margin: 30px auto;
+  padding: 20px;
+  font-family: Arial, sans-serif;
+  background: #f9fafb;
+}
+
+/* Title */
+.title {
+  text-align: center;
+  color: #1f2937;
+  margin-bottom: 20px;
+}
+
+/* Table */
+.table-wrapper {
+  overflow-x: auto;
+  margin-bottom: 30px;
+}
+
+.blotter-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.blotter-table th,
+.blotter-table td {
+  padding: 12px;
+  border-bottom: 1px solid #e5e7eb;
+  text-align: center;
+}
+
+.blotter-table th {
+  background: #7c3aed;
+  color: white;
+}
+
+/* Form */
+.form-container {
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.input {
+  width: 100%;
+  padding: 10px;
+  margin: 10px 0;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+}
+
+/* Add button */
+.add-btn {
+  background: #22c55e;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  cursor: pointer;
+  border-radius: 6px;
+  margin-top: 10px;
+}
+
+.add-btn:hover {
+  background: #16a34a;
+}
+
+/* Status badges */
+.status {
+  padding: 5px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.status.pending {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.status.resolved {
+  background: #d1fae5;
+  color: #065f46;
+}
+
+.status.active {
+  background: #dbeafe;
+  color: #1e3a8a;
+}

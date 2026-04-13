@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import "../style/HouseholdManagement.css";
 
 function HouseholdManagement() {
   const [households, setHouseholds] = useState([]);
@@ -14,13 +15,16 @@ function HouseholdManagement() {
     setHouseholds(res.data);
   };
 
-  useEffect(() => { fetchData(); }, []);
+  useEffect(() => {
+    fetchData();
+  }, []);
 
   const handleInput = (e) =>
     setForm({ ...form, [e.target.name]: e.target.value });
 
   const addHousehold = async () => {
     await axios.post("http://localhost:5000/api/households", form);
+    setForm({ address: "", purok: "", date_registered: "" });
     fetchData();
   };
 
@@ -30,42 +34,73 @@ function HouseholdManagement() {
   };
 
   return (
-    <div>
-      <h3>Households</h3>
+    <div className="household-container">
+      <h2 className="title">Household Management</h2>
 
-      <table border="1">
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Address</th>
-            <th>Purok</th>
-            <th>Date Registered</th>
-            <th>Action</th>
-          </tr>
-        </thead>
-
-        <tbody>
-          {households.map(h => (
-            <tr key={h.household_id}>
-              <td>{h.household_id}</td>
-              <td>{h.address}</td>
-              <td>{h.purok}</td>
-              <td>{h.date_registered}</td>
-              <td>
-                <button onClick={() => deleteHousehold(h.household_id)}>
-                  Delete
-                </button>
-              </td>
+      <div className="table-wrapper">
+        <table className="household-table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Address</th>
+              <th>Purok</th>
+              <th>Date Registered</th>
+              <th>Action</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
 
-      <h4>Add Household</h4>
-      <input name="address" placeholder="Address" onChange={handleInput} />
-      <input name="purok" placeholder="Purok" onChange={handleInput} />
-      <input type="date" name="date_registered" onChange={handleInput} />
-      <button onClick={addHousehold}>Add</button>
+          <tbody>
+            {households.map((h) => (
+              <tr key={h.household_id}>
+                <td>{h.household_id}</td>
+                <td>{h.address}</td>
+                <td>{h.purok}</td>
+                <td>{h.date_registered}</td>
+                <td>
+                  <button
+                    className="delete-btn"
+                    onClick={() => deleteHousehold(h.household_id)}
+                  >
+                    Delete
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      <div className="form-container">
+        <h3>Add Household</h3>
+
+        <input
+          className="input"
+          name="address"
+          placeholder="Address"
+          value={form.address}
+          onChange={handleInput}
+        />
+
+        <input
+          className="input"
+          name="purok"
+          placeholder="Purok"
+          value={form.purok}
+          onChange={handleInput}
+        />
+
+        <input
+          className="input"
+          type="date"
+          name="date_registered"
+          value={form.date_registered}
+          onChange={handleInput}
+        />
+
+        <button className="add-btn" onClick={addHousehold}>
+          Add Household
+        </button>
+      </div>
     </div>
   );
 }

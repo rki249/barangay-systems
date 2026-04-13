@@ -1,0 +1,85 @@
+/* Container */
+.household-container {
+  max-width: 1000px;
+  margin: 30px auto;
+  padding: 20px;
+  font-family: Arial, sans-serif;
+  background: #f9fafb;
+}
+
+/* Title */
+.title {
+  text-align: center;
+  color: #1f2937;
+  margin-bottom: 20px;
+}
+
+/* Table wrapper */
+.table-wrapper {
+  overflow-x: auto;
+  margin-bottom: 30px;
+}
+
+/* Table */
+.household-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.household-table th,
+.household-table td {
+  padding: 12px;
+  border-bottom: 1px solid #e5e7eb;
+  text-align: center;
+}
+
+.household-table th {
+  background: #1d4ed8;
+  color: white;
+}
+
+/* Form */
+.form-container {
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.input {
+  width: 100%;
+  padding: 10px;
+  margin: 10px 0;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+}
+
+/* Buttons */
+.add-btn {
+  background: #22c55e;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  cursor: pointer;
+  border-radius: 6px;
+  margin-top: 10px;
+}
+
+.add-btn:hover {
+  background: #16a34a;
+}
+
+.delete-btn {
+  background: #ef4444;
+  color: white;
+  border: none;
+  padding: 6px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.delete-btn:hover {
+  background: #dc2626;
+}

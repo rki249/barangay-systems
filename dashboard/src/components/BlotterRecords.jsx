@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import "../style/BlotterRecords.css";
 
 function BlotterRecords() {
   const [records, setRecords] = useState([]);
+
   const [form, setForm] = useState({
     complainant_id: "",
     respondent_name: "",
@@ -18,55 +20,128 @@ function BlotterRecords() {
     setRecords(res.data);
   };
 
-  useEffect(() => { fetchData(); }, []);
+  useEffect(() => {
+    fetchData();
+  }, []);
 
   const handleInput = (e) =>
     setForm({ ...form, [e.target.name]: e.target.value });
 
   const addBlotter = async () => {
     await axios.post("http://localhost:5000/api/blotters", form);
+
+    setForm({
+      complainant_id: "",
+      respondent_name: "",
+      incident_date: "",
+      incident_location: "",
+      complaint_details: "",
+      status: "Pending",
+      recorded_by: ""
+    });
+
     fetchData();
   };
 
   return (
-    <div>
-      <h3>Blotter Records</h3>
+    <div className="blotter-container">
+      <h2 className="title">Blotter Records</h2>
 
-      <table border="1">
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Complainant</th>
-            <th>Respondent</th>
-            <th>Date</th>
-            <th>Location</th>
-            <th>Status</th>
-          </tr>
-        </thead>
-
-        <tbody>
-          {records.map(r => (
-            <tr key={r.blotter_id}>
-              <td>{r.blotter_id}</td>
-              <td>{r.complainant_name}</td>
-              <td>{r.respondent_name}</td>
-              <td>{r.incident_date}</td>
-              <td>{r.incident_location}</td>
-              <td>{r.status}</td>
+      <div className="table-wrapper">
+        <table className="blotter-table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Complainant</th>
+              <th>Respondent</th>
+              <th>Date</th>
+              <th>Location</th>
+              <th>Status</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
 
-      <h4>Add Blotter</h4>
-      <input name="complainant_id" placeholder="Resident ID" onChange={handleInput} />
-      <input name="respondent_name" placeholder="Respondent Name" onChange={handleInput} />
-      <input type="date" name="incident_date" onChange={handleInput} />
-      <input name="incident_location" placeholder="Location" onChange={handleInput} />
-      <input name="complaint_details" placeholder="Details" onChange={handleInput} />
-      <input name="recorded_by" placeholder="User ID" onChange={handleInput} />
+          <tbody>
+            {records.map((r) => (
+              <tr key={r.blotter_id}>
+                <td>{r.blotter_id}</td>
+                <td>{r.complainant_name}</td>
+                <td>{r.respondent_name}</td>
+                <td>{r.incident_date}</td>
+                <td>{r.incident_location}</td>
+                <td>
+                  <span
+                    className={`status ${
+                      r.status === "Pending"
+                        ? "pending"
+                        : r.status === "Resolved"
+                        ? "resolved"
+                        : "active"
+                    }`}
+                  >
+                    {r.status}
+                  </span>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
 
-      <button onClick={addBlotter}>Add</button>
+      <div className="form-container">
+        <h3>Add Blotter</h3>
+
+        <input
+          className="input"
+          name="complainant_id"
+          placeholder="Resident ID"
+          value={form.complainant_id}
+          onChange={handleInput}
+        />
+
+        <input
+          className="input"
+          name="respondent_name"
+          placeholder="Respondent Name"
+          value={form.respondent_name}
+          onChange={handleInput}
+        />
+
+        <input
+          className="input"
+          type="date"
+          name="incident_date"
+          value={form.incident_date}
+          onChange={handleInput}
+        />
+
+        <input
+          className="input"
+          name="incident_location"
+          placeholder="Location"
+          value={form.incident_location}
+          onChange={handleInput}
+        />
+
+        <input
+          className="input"
+          name="complaint_details"
+          placeholder="Details"
+          value={form.complaint_details}
+          onChange={handleInput}
+        />
+
+        <input
+          className="input"
+          name="recorded_by"
+          placeholder="User ID"
+          value={form.recorded_by}
+          onChange={handleInput}
+        />
+
+        <button className="add-btn" onClick={addBlotter}>
+          Add Blotter
+        </button>
+      </div>
     </div>
   );
 }

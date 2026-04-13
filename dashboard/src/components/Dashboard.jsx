@@ -6,6 +6,8 @@ import ResidentManagement from "./ResidentManagement";
 import HouseholdManagement from "./HouseholdManagement";
 import BlotterRecords from "./BlotterRecords";
 
+import "../style/Dashboard.css";
+
 function Dashboard({ user, setUser }) {
   const navigate = useNavigate();
 
@@ -15,38 +17,56 @@ function Dashboard({ user, setUser }) {
   };
 
   return (
-    <div>
-      <h2>Barangay System Dashboard</h2>
-      <p>Welcome, {user.full_name} ({user.role})</p>
+    <div className="dashboard-container">
+      {/* HEADER */}
+      <div className="dashboard-header">
+        <h2 className="dashboard-title">Barangay System Dashboard</h2>
+        <p className="dashboard-user">
+          Welcome, <b>{user.full_name}</b> ({user.role})
+        </p>
+      </div>
 
-      <div style={{ marginBottom: "20px" }}>
+      {/* NAV BUTTONS */}
+      <div className="dashboard-nav">
         <button onClick={() => navigate("/dashboard/residents")}>
-          Resident Management
+          Residents
         </button>
 
         <button onClick={() => navigate("/dashboard/households")}>
-          Household Management
+          Households
         </button>
 
         <button onClick={() => navigate("/dashboard/blotters")}>
-          Blotter Records
+          Blotters
         </button>
 
         <button onClick={() => navigate("/dashboard/users")}>
-          User Management
+          Users
         </button>
 
-        <button onClick={logout}>Logout</button>
+        <button className="logout-btn" onClick={logout}>
+          Logout
+        </button>
       </div>
 
-      {/* Nested Routes */}
-      <Routes>
-        <Route index element={<p>Select a section to manage.</p>} />
-        <Route path="users" element={<UserManagement />} />
-        <Route path="residents" element={<ResidentManagement />} />
-        <Route path="households" element={<HouseholdManagement />} />
-        <Route path="blotters" element={<BlotterRecords />} />
-      </Routes>
+      {/* CONTENT AREA */}
+      <div className="dashboard-content">
+        <Routes>
+          <Route
+            index
+            element={
+              <div className="dashboard-home">
+                <h3>Welcome to the system</h3>
+                <p>Select a module from above to manage records.</p>
+              </div>
+            }
+          />
+          <Route path="users" element={<UserManagement />} />
+          <Route path="residents" element={<ResidentManagement />} />
+          <Route path="households" element={<HouseholdManagement />} />
+          <Route path="blotters" element={<BlotterRecords />} />
+        </Routes>
+      </div>
     </div>
   );
 }
