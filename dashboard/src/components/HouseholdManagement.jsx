@@ -1,8 +1,11 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import "../style/HouseholdManagement.css";
+import { useNavigate } from "react-router-dom"; 
+
 
 function HouseholdManagement() {
+    const navigate = useNavigate(); 
   const [households, setHouseholds] = useState([]);
   const [form, setForm] = useState({
     address: "",
@@ -100,7 +103,11 @@ function HouseholdManagement() {
         <button className="add-btn" onClick={addHousehold}>
           Add Household
         </button>
+       
       </div>
+       <button className="back-btn" onClick={() => navigate("/dashboard")}>
+        Back to Dashboard
+      </button>
     </div>
   );
 }

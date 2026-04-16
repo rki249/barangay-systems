@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom"; 
 import "../style/UserManagement.css";
 
 function UserManagement() {
+  const navigate = useNavigate(); 
+
   const [users, setUsers] = useState([]);
   const [form, setForm] = useState({
     full_name: "",
@@ -135,6 +138,14 @@ function UserManagement() {
           Add User
         </button>
       </div>
+
+
+      <button
+        className="back-btn"
+        onClick={() => navigate("/dashboard")} 
+      >
+        Back to Dashboard
+      </button>
     </div>
   );
 }

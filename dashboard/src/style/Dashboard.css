@@ -1,72 +1,127 @@
-/* MAIN LAYOUT */
+
+/* ===== GLOBAL ===== */
 .dashboard-container {
-  font-family: Arial, sans-serif;
-  background: #f9fafb;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+
+  /* soft light background (user-friendly) */
+  background: #f1f5f9;
+
   min-height: 100vh;
-  padding: 20px;
+  padding: 30px;
+  color: #1f2937;
 }
 
-/* HEADER */
+/* ===== HEADER ===== */
 .dashboard-header {
-  background: white;
-  padding: 20px;
-  border-radius: 10px;
-  margin-bottom: 15px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  background: #ffffff;
+  padding: 25px;
+  border-radius: 15px;
+  margin-bottom: 25px;
+
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  color: #1f2937;
+  border-left: 6px solid #3b82f6;
 }
 
 .dashboard-title {
   margin: 0;
-  color: #111827;
+  font-size: 24px;
+  font-weight: 700;
 }
 
 .dashboard-user {
-  margin-top: 5px;
-  color: #4b5563;
+  margin-top: 6px;
+  color: #6b7280;
 }
 
-/* NAV BUTTONS */
+/* ===== NAV CONTAINER ===== */
 .dashboard-nav {
-  display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
-  margin-bottom: 20px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+
+  width: 100%;
+  max-width: 900px;
+  margin: 0 auto 30px auto;
 }
 
+/* ===== BUTTONS (USER FRIENDLY CARDS) ===== */
 .dashboard-nav button {
-  padding: 10px 15px;
+  width: 100%;
+  height: 110px;
+
   border: none;
-  background: #1f2937;
-  color: white;
-  border-radius: 6px;
+  border-radius: 14px;
   cursor: pointer;
-  transition: 0.2s;
+
+  font-size: 16px;
+  font-weight: 600;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  transition: all 0.25s ease;
+
+  /* soft white card */
+  background: #ffffff;
+  color: #1f2937;
+
+  box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+
+  border: 1px solid #e5e7eb;
 }
 
+/* ===== HOVER (HIGH CONTRAST BUT FRIENDLY) ===== */
 .dashboard-nav button:hover {
-  background: #374151;
+  transform: translateY(-4px);
+
+  background: #3b82f6;
+  color: #ffffff;
+
+  box-shadow: 0 10px 20px rgba(59,130,246,0.25);
+  border-color: #3b82f6;
 }
 
-/* LOGOUT BUTTON */
+/* ===== ICONS ===== */
+.dashboard-nav button::before {
+  font-size: 26px;
+  margin-bottom: 8px;
+  opacity: 0.9;
+}
+
+/* ICONS */
+.dashboard-nav button:nth-child(1)::before { content: "👤"; }
+.dashboard-nav button:nth-child(2)::before { content: "🏠"; }
+.dashboard-nav button:nth-child(3)::before { content: "📄"; }
+.dashboard-nav button:nth-child(4)::before { content: "⚙️"; }
+.dashboard-nav button:nth-child(5)::before { content: "🚪"; }
+
+/* ===== LOGOUT BUTTON ===== */
 .logout-btn {
-  background: #ef4444 !important;
+  background: #ffffff !important;
+  color: #ef4444 !important;
+  border: 1px solid #fecaca !important;
 }
 
 .logout-btn:hover {
-  background: #dc2626 !important;
+  background: #ef4444 !important;
+  color: white !important;
+  border-color: #ef4444 !important;
 }
 
-/* CONTENT AREA */
+/* ===== CONTENT AREA ===== */
 .dashboard-content {
-  background: white;
-  padding: 20px;
-  border-radius: 10px;
+  background: #ffffff;
+  padding: 25px;
+  border-radius: 15px;
   min-height: 400px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-}
 
-/* HOME SCREEN */
-.dashboard-home {
-  text-align: center;
-  color: #374151;
+  width: 100%;
+  max-width: 900px;
+  margin: auto;
+
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  border: 1px solid #e5e7eb;
 }

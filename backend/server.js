@@ -3,15 +3,16 @@ const cors = require('cors');
 
 const userRoutes = require('./routes/users');
 const loginRoutes = require('./routes/login');
+const residentRoutes = require('./routes/residents'); 
 
 const app = express();
 
 app.use(cors());
 app.use(express.json());
 
-
 app.use("/api/login", loginRoutes);
 app.use("/api/users", userRoutes);
+app.use("/api/residents", residentRoutes); 
 
 const PORT = 5000;
 

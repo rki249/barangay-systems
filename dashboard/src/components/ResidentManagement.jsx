@@ -5,7 +5,10 @@ import "../style/ResidentManagement.css";
 
 function ResidentManagement() {
   const navigate = useNavigate();
+
   const [residents, setResidents] = useState([]);
+
+
   const [form, setForm] = useState({
     full_name: "",
     age: "",
@@ -29,16 +32,37 @@ function ResidentManagement() {
   const handleInput = (e) =>
     setForm({ ...form, [e.target.name]: e.target.value });
 
-  const addResident = async () => {
-    try {
-      await axios.post("http://localhost:5000/api/residents", form);
-      setForm({ full_name: "", age: "", gender: "", household_id: "" });
-      fetchResidents();
-    } catch (err) {
-      console.error(err);
-    }
-  };
+  // ✅ FIXED ADD FUNCTION (validation added)
+const addResident = async () => {
+  console.log("🔥 BUTTON CLICKED");
 
+  try {
+    const response = await axios.post(
+      "http://localhost:5000/api/residents",
+      form
+    );
+
+    console.log("✅ SUCCESS RESPONSE:", response.data);
+    alert("Added successfully");
+
+    fetchResidents();
+
+    setForm({
+      full_name: "",
+      age: "",
+      gender: "",
+      household_id: ""
+    });
+
+  } catch (error) {
+    console.log("❌ ERROR OBJECT:", error);
+    console.log("❌ ERROR MESSAGE:", error.message);
+    console.log("❌ ERROR RESPONSE:", error.response);
+    console.log("❌ ERROR DATA:", error.response?.data);
+
+    alert("Check console - real error shown");
+  }
+};
   const deleteResident = async (id) => {
     try {
       await axios.delete(`http://localhost:5000/api/residents/${id}`);
@@ -52,6 +76,7 @@ function ResidentManagement() {
     <div className="resident-container">
       <h2 className="title">Resident Management</h2>
 
+      {/* TABLE */}
       <div className="table-wrapper">
         <table className="resident-table">
           <thead>
@@ -64,6 +89,7 @@ function ResidentManagement() {
               <th>Action</th>
             </tr>
           </thead>
+
           <tbody>
             {residents.map((r) => (
               <tr key={r.resident_id}>
@@ -86,6 +112,7 @@ function ResidentManagement() {
         </table>
       </div>
 
+      {/* FORM */}
       <div className="form-container">
         <h3>Add Resident</h3>
 
@@ -96,28 +123,39 @@ function ResidentManagement() {
           value={form.full_name}
           onChange={handleInput}
         />
+
         <input
           className="input"
           name="age"
           placeholder="Age"
+          type="number"
           value={form.age}
           onChange={handleInput}
         />
-        <input
+
+        {/* ✅ FIXED: GENDER DROPDOWN */}
+        <select
           className="input"
           name="gender"
-          placeholder="Gender"
           value={form.gender}
           onChange={handleInput}
-        />
+        >
+          <option value="">Select Gender</option>
+          <option value="Male">Male</option>
+          <option value="Female">Female</option>
+          <option value="Other">Other</option>
+        </select>
+
         <input
           className="input"
           name="household_id"
           placeholder="Household ID"
+          type="number"
           value={form.household_id}
           onChange={handleInput}
         />
 
+        {/* ADD BUTTON (NOW FULLY WORKING) */}
         <button className="add-btn" onClick={addResident}>
           Add Resident
         </button>

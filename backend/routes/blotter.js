@@ -12,4 +12,4 @@ app.get("/api/blotters", (req, res) => {
     if (err) return res.send(err);
     res.json(result);
   });
-});
+}); //fgewfgwegwe

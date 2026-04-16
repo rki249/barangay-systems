@@ -1,8 +1,12 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import "../style/BlotterRecords.css";
+import { useNavigate } from "react-router-dom"; 
+
 
 function BlotterRecords() {
+  const navigate = useNavigate(); 
+
   const [records, setRecords] = useState([]);
 
   const [form, setForm] = useState({
@@ -141,7 +145,11 @@ function BlotterRecords() {
         <button className="add-btn" onClick={addBlotter}>
           Add Blotter
         </button>
+       
       </div>
+       <button className="back-btn" onClick={() => navigate("/dashboard")}>
+        Back to Dashboard
+      </button>
     </div>
   );
 }
