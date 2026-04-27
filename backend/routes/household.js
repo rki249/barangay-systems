@@ -1,33 +1,46 @@
-// GET households
-app.get("/api/households", (req, res) => {
-  db.query("SELECT * FROM household", (err, result) => {
-    if (err) return res.send(err);
+const express = require('express');
+const router = express.Router();
+const db = require('../db');
+
+router.get('/', (req, res) => {
+  db.query('SELECT * FROM household ORDER BY household_id DESC', (err, result) => {
+    if (err) {
+      console.log(err);
+      return res.status(500).json(err);
+    }
     res.json(result);
   });
 });
 
-// ADD household
-app.post("/api/households", (req, res) => {
+router.post('/', (req, res) => {
   const { address, purok, date_registered } = req.body;
 
-  db.query(
-    "INSERT INTO household (address, purok, date_registered) VALUES (?, ?, ?)",
-    [address, purok, date_registered],
-    (err) => {
-      if (err) return res.send(err);
-      res.send("Household added");
+  const sql = `
+    INSERT INTO household (address, purok, date_registered)
+    VALUES (?, ?, ?)
+  `;
+
+  db.query(sql, [address, purok, date_registered], (err, result) => {
+    if (err) {
+      console.log('INSERT ERROR:', err);
+      return res.status(500).json(err);
     }
-  );
+
+    res.json({ message: 'Household added successfully' });
+  });
 });
 
-// DELETE household
-app.delete("/api/households/:id", (req, res) => {
-  db.query(
-    "DELETE FROM household WHERE household_id=?",
-    [req.params.id],
-    (err) => {
-      if (err) return res.send(err);
-      res.send("Deleted");
+router.delete('/:id', (req, res) => {
+  const id = req.params.id;
+
+  db.query('DELETE FROM household WHERE household_id = ?', [id], (err, result) => {
+    if (err) {
+      console.log(err);
+      return res.status(500).json(err);
     }
-  );
+
+    res.json({ message: 'Deleted successfully' });
+  });
 });
+
+module.exports = router;

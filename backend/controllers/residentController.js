@@ -13,18 +13,17 @@ exports.getResidents = (req, res) => {
 
 exports.addResident = (req, res) => {
 
-    // ✅ MATCH YOUR FRONTEND
-    const { full_name, age, gender, household_id } = req.body;
+    const { first_name, last_name, sex, birthdate, household_id } = req.body;
 
     const sql = `
         INSERT INTO resident 
-        (full_name, age, gender, household_id) 
-        VALUES (?, ?, ?, ?)
+        (first_name, last_name, sex, birthdate, household_id) 
+        VALUES (?, ?, ?, ?, ?)
     `;
 
     db.query(
         sql,
-        [full_name, age, gender, household_id],
+        [first_name, last_name, sex, birthdate, household_id],
         (err, result) => {
             if (err) {
                 return res.status(500).json(err);
@@ -32,4 +31,16 @@ exports.addResident = (req, res) => {
             res.json("Resident Added Successfully");
         }
     );
+};
+
+exports.deleteResident = (req, res) => {
+    const id = req.params.id;
+    const sql = 'DELETE FROM resident WHERE resident_id = ?';
+
+    db.query(sql, [id], (err, result) => {
+        if (err) {
+            return res.status(500).json(err);
+        }
+        res.json({ message: 'Resident deleted successfully' });
+    });
 };

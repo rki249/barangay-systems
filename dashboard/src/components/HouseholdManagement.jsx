@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import "../style/HouseholdManagement.css";
-import { useNavigate } from "react-router-dom"; 
-
+import { useNavigate } from "react-router-dom";
 
 function HouseholdManagement() {
-    const navigate = useNavigate(); 
+  const navigate = useNavigate();
+
   const [households, setHouseholds] = useState([]);
   const [form, setForm] = useState({
     address: "",
@@ -13,71 +13,91 @@ function HouseholdManagement() {
     date_registered: ""
   });
 
+  // GET DATA
   const fetchData = async () => {
-    const res = await axios.get("http://localhost:5000/api/households");
-    setHouseholds(res.data);
+    try {
+      const res = await axios.get("http://localhost:5000/api/households");
+      setHouseholds(res.data);
+    } catch (err) {
+      console.log("FETCH ERROR:", err);
+    }
   };
 
   useEffect(() => {
     fetchData();
   }, []);
 
-  const handleInput = (e) =>
+  // INPUT HANDLER
+  const handleInput = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
-
-  const addHousehold = async () => {
-    await axios.post("http://localhost:5000/api/households", form);
-    setForm({ address: "", purok: "", date_registered: "" });
-    fetchData();
   };
 
+  // ADD HOUSEHOLD
+  const addHousehold = async () => {
+    console.log("CLICKED ADD");
+    console.log("FORM DATA:", form);
+
+    try {
+      await axios.post("http://localhost:5000/api/households", form);
+
+      setForm({
+        address: "",
+        purok: "",
+        date_registered: ""
+      });
+
+      fetchData();
+    } catch (err) {
+      console.log("ADD ERROR:", err.response?.data || err.message);
+    }
+  };
+
+  // DELETE HOUSEHOLD
   const deleteHousehold = async (id) => {
-    await axios.delete(`http://localhost:5000/api/households/${id}`);
-    fetchData();
+    try {
+      await axios.delete(`http://localhost:5000/api/households/${id}`);
+      fetchData();
+    } catch (err) {
+      console.log("DELETE ERROR:", err);
+    }
   };
 
   return (
     <div className="household-container">
       <h2 className="title">Household Management</h2>
 
-      <div className="table-wrapper">
-        <table className="household-table">
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Address</th>
-              <th>Purok</th>
-              <th>Date Registered</th>
-              <th>Action</th>
+      {/* TABLE */}
+      <table className="household-table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Address</th>
+            <th>Purok</th>
+            <th>Date Registered</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          {households.map((h) => (
+            <tr key={h.household_id}>
+              <td>{h.household_id}</td>
+              <td>{h.address}</td>
+              <td>{h.purok}</td>
+              <td>{h.date_registered}</td>
+              <td>
+                <button onClick={() => deleteHousehold(h.household_id)}>
+                  Delete
+                </button>
+              </td>
             </tr>
-          </thead>
+          ))}
+        </tbody>
+      </table>
 
-          <tbody>
-            {households.map((h) => (
-              <tr key={h.household_id}>
-                <td>{h.household_id}</td>
-                <td>{h.address}</td>
-                <td>{h.purok}</td>
-                <td>{h.date_registered}</td>
-                <td>
-                  <button
-                    className="delete-btn"
-                    onClick={() => deleteHousehold(h.household_id)}
-                  >
-                    Delete
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-
+      {/* FORM */}
       <div className="form-container">
-        <h3>Add Household</h3>
-
         <input
-          className="input"
           name="address"
           placeholder="Address"
           value={form.address}
@@ -85,7 +105,6 @@ function HouseholdManagement() {
         />
 
         <input
-          className="input"
           name="purok"
           placeholder="Purok"
           value={form.purok}
@@ -93,19 +112,16 @@ function HouseholdManagement() {
         />
 
         <input
-          className="input"
           type="date"
           name="date_registered"
           value={form.date_registered}
           onChange={handleInput}
         />
 
-        <button className="add-btn" onClick={addHousehold}>
-          Add Household
-        </button>
-       
+        <button onClick={addHousehold}>Add Household</button>
       </div>
-       <button className="back-btn" onClick={() => navigate("/dashboard")}>
+
+      <button onClick={() => navigate("/dashboard")}>
         Back to Dashboard
       </button>
     </div>

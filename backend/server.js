@@ -3,16 +3,20 @@ const cors = require('cors');
 
 const userRoutes = require('./routes/users');
 const loginRoutes = require('./routes/login');
-const residentRoutes = require('./routes/residents'); 
+const residentRoutes = require('./routes/residents');
+const householdRoutes = require('./routes/household');
+const blotterRoutes = require('./routes/blotter');
 
 const app = express();
 
 app.use(cors());
 app.use(express.json());
 
-app.use("/api/login", loginRoutes);
-app.use("/api/users", userRoutes);
-app.use("/api/residents", residentRoutes); 
+app.use('/api/login', loginRoutes);
+app.use('/api/users', userRoutes);
+app.use('/api/residents', residentRoutes);
+app.use('/api/households', householdRoutes);
+app.use('/api/blotters', blotterRoutes);
 
 const PORT = 5000;
 
