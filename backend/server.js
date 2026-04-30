@@ -18,6 +18,22 @@ app.use('/api/residents', residentRoutes);
 app.use('/api/households', householdRoutes);
 app.use('/api/blotters', blotterRoutes);
 
+// Root route - API welcome message
+app.get('/', (req, res) => {
+    res.json({
+        message: 'Barangay System API',
+        status: 'online',
+        version: '1.0.0',
+        endpoints: {
+            login: '/api/login',
+            users: '/api/users',
+            residents: '/api/residents',
+            households: '/api/households',
+            blotters: '/api/blotters'
+        }
+    });
+});
+
 const PORT = 5000;
 
 app.listen(PORT, () => {

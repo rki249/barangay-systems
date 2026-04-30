@@ -17,7 +17,7 @@ router.post("/", (req, res) => {
       // Login successful
       res.json({ message: "Login Successful", user: result[0] });
     } else {
-      // Login failed
+      // Login failed 
       res.status(401).json({ message: "Invalid Username or Password" });
     }
   });
