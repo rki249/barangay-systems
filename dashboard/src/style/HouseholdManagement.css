@@ -1,85 +1,144 @@
-/* Container */
-.household-container {
-  max-width: 1000px;
-  margin: 30px auto;
-  padding: 20px;
-  font-family: Arial, sans-serif;
-  background: #f9fafb;
+/* ===== GLOBAL PAGE ===== */
+.household-page {
+  /* Increased from 1200px to 1600px or 95% to utilize more screen space */
+  max-width: 1600px; 
+  margin: 0 auto;
+  padding: 30px;
+
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  background: #f1f5f9;
+  min-height: 100vh;
 }
 
-/* Title */
-.title {
+/* ===== TITLE ===== */
+.household-title {
+  font-size: 32px; /* Slightly larger for the wider layout */
+  font-weight: 800;
+  color: #0f172a;
   text-align: center;
-  color: #1f2937;
-  margin-bottom: 20px;
-}
-
-/* Table wrapper */
-.table-wrapper {
-  overflow-x: auto;
   margin-bottom: 30px;
 }
 
-/* Table */
+/* ===== LAYOUT ===== */
+.household-layout {
+  display: flex;
+  flex-direction: column;
+  gap: 25px; /* Tightened gap to match the clean look of the images */
+  align-items: center;
+}
+
+/* ===== TABLE WRAPPER (FULL WIDTH) ===== */
+.household-table-wrapper {
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 20px;
+
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+  border: 1px solid #e5e7eb;
+
+  overflow-x: auto;
+  width: 100%; /* Stretches to the new 1600px limit */
+  box-sizing: border-box;
+}
+
+/* ===== TABLE ===== */
 .household-table {
   width: 100%;
   border-collapse: collapse;
-  background: white;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-}
-
-.household-table th,
-.household-table td {
-  padding: 12px;
-  border-bottom: 1px solid #e5e7eb;
-  text-align: center;
 }
 
 .household-table th {
-  background: #1d4ed8;
+  background: linear-gradient(135deg, #3b82f6, #1d4ed8);
   color: white;
+  padding: 16px;
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
-/* Form */
-.form-container {
-  background: white;
-  padding: 20px;
-  border-radius: 10px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+.household-table td {
+  padding: 15px;
+  text-align: center;
+  border-bottom: 1px solid #f1f5f9;
+  color: #334155;
 }
 
-.input {
+/* ===== FORM (WIDE CARD) ===== */
+.household-form {
+  background: #ffffff;
+  padding: 40px 60px; /* Extra horizontal padding for that wide look */
+
+  border-radius: 16px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+  border: 1px solid #e5e7eb;
+
+  position: static;
+  
+  /* Removed max-width: 500px; to allow it to be as wide as the table */
+  width: 100%; 
+  box-sizing: border-box;
+}
+
+/* FORM TITLE */
+.household-form h3 {
+  margin-bottom: 30px;
+  font-size: 22px;
+  font-weight: 700;
+  color: #0f172a;
+  text-align: center;
+}
+
+/* INPUTS (FULL WIDTH OF THE WIDE CARD) */
+.form-input {
   width: 100%;
-  padding: 10px;
-  margin: 10px 0;
+  padding: 14px;
+  margin-bottom: 18px;
+
   border: 1px solid #d1d5db;
-  border-radius: 6px;
+  border-radius: 10px;
+  font-size: 15px;
+
+  box-sizing: border-box;
+  transition: all 0.2s ease;
 }
 
-/* Buttons */
-.add-btn {
-  background: #22c55e;
-  color: white;
-  border: none;
-  padding: 10px 15px;
-  cursor: pointer;
-  border-radius: 6px;
+.form-input:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+  outline: none;
+}
+
+/* ADD BUTTON */
+.btn-add {
+  width: 100%;
+  padding: 15px;
   margin-top: 10px;
-}
 
-.add-btn:hover {
-  background: #16a34a;
-}
-
-.delete-btn {
-  background: #ef4444;
+  background: linear-gradient(135deg, #22c55e, #16a34a);
   color: white;
   border: none;
-  padding: 6px 10px;
-  border-radius: 5px;
+  border-radius: 10px;
+
+  font-weight: 700;
+  font-size: 16px;
   cursor: pointer;
+  transition: 0.3s;
 }
 
-.delete-btn:hover {
-  background: #dc2626;
+.btn-add:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.1);
+}
+
+/* BACK BUTTON */
+.btn-back {
+  display: block;
+  margin: 40px auto;
+  background: #475569;
+  color: white;
+  border: none;
+  padding: 12px 30px;
+  border-radius: 10px;
+  font-weight: 600;
+  cursor: pointer;
 }

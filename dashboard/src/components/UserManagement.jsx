@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom"; 
-import "../style/UserManagement.css";
+import { useNavigate } from "react-router-dom";
+import "../style/Usermanagement.css";
 
 function UserManagement() {
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
 
   const [users, setUsers] = useState([]);
   const [form, setForm] = useState({
@@ -58,11 +58,11 @@ function UserManagement() {
   };
 
   return (
-    <div className="user-container">
+    <div className="page-container">
       <h2 className="title">User Management</h2>
 
       <div className="table-wrapper">
-        <table className="user-table">
+        <table className="data-table">
           <thead>
             <tr>
               <th>ID</th>
@@ -126,24 +126,23 @@ function UserManagement() {
           onChange={handleInput}
         />
 
-        <input
+        <select
           className="input"
           name="role"
-          placeholder="Role (Admin/User)"
           value={form.role}
           onChange={handleInput}
-        />
+        >
+          <option value="">Select Role</option>
+          <option value="Admin">Admin</option>
+          <option value="Staff">Staff</option>
+        </select>
 
         <button className="add-btn" onClick={addUser}>
           Add User
         </button>
       </div>
 
-
-      <button
-        className="back-btn"
-        onClick={() => navigate("/dashboard")} 
-      >
+      <button className="back-btn" onClick={() => navigate("/dashboard")}>
         Back to Dashboard
       </button>
     </div>

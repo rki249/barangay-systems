@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import "../style/BlotterRecords.css";
-import { useNavigate } from "react-router-dom"; 
-
+import { useNavigate } from "react-router-dom";
 
 function BlotterRecords() {
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
 
   const [records, setRecords] = useState([]);
+  const [residents, setResidents] = useState([]);
 
   const [form, setForm] = useState({
     complainant_id: "",
@@ -19,38 +19,75 @@ function BlotterRecords() {
     recorded_by: ""
   });
 
+  // GET BLOTTERS
   const fetchData = async () => {
-    const res = await axios.get("http://localhost:5000/api/blotters");
-    setRecords(res.data);
+    try {
+      const res = await axios.get("http://localhost:5000/api/blotters");
+      setRecords(res.data);
+    } catch (error) {
+      console.error("Error fetching blotters:", error);
+    }
+  };
+
+  // GET RESIDENTS FOR DROPDOWN
+  const fetchResidents = async () => {
+    try {
+      const res = await axios.get("http://localhost:5000/api/residents");
+      setResidents(res.data);
+    } catch (error) {
+      console.error("Error fetching residents:", error);
+    }
   };
 
   useEffect(() => {
     fetchData();
+    fetchResidents();
   }, []);
 
+  // INPUT HANDLER
   const handleInput = (e) =>
     setForm({ ...form, [e.target.name]: e.target.value });
 
+  // ADD BLOTTER (FIXED BUTTON LOGIC)
   const addBlotter = async () => {
-    await axios.post("http://localhost:5000/api/blotters", form);
+    try {
+      // VALIDATION
+      if (!form.complainant_id) {
+        alert("Please select a resident.");
+        return;
+      }
 
-    setForm({
-      complainant_id: "",
-      respondent_name: "",
-      incident_date: "",
-      incident_location: "",
-      complaint_details: "",
-      status: "Pending",
-      recorded_by: ""
-    });
+      if (!form.respondent_name || !form.incident_date) {
+        alert("Please fill required fields.");
+        return;
+      }
 
-    fetchData();
+      await axios.post("http://localhost:5000/api/blotters", form);
+
+      alert("Blotter added successfully!");
+
+      setForm({
+        complainant_id: "",
+        respondent_name: "",
+        incident_date: "",
+        incident_location: "",
+        complaint_details: "",
+        status: "Pending",
+        recorded_by: ""
+      });
+
+      fetchData();
+    } catch (error) {
+      console.error("Error adding blotter:", error);
+      alert("Failed to add blotter.");
+    }
   };
 
   return (
     <div className="blotter-container">
       <h2 className="title">Blotter Records</h2>
 
+      {/* TABLE */}
       <div className="table-wrapper">
         <table className="blotter-table">
           <thead>
@@ -91,16 +128,24 @@ function BlotterRecords() {
         </table>
       </div>
 
+      {/* FORM */}
       <div className="form-container">
         <h3>Add Blotter</h3>
 
-        <input
+        {/* RESIDENT DROPDOWN */}
+        <select
           className="input"
           name="complainant_id"
-          placeholder="Resident ID"
           value={form.complainant_id}
           onChange={handleInput}
-        />
+        >
+          <option value="">Select Resident</option>
+          {residents.map((r) => (
+            <option key={r.resident_id} value={r.resident_id}>
+              {r.resident_id} - {r.first_name} {r.last_name}
+            </option>
+          ))}
+        </select>
 
         <input
           className="input"
@@ -134,20 +179,13 @@ function BlotterRecords() {
           onChange={handleInput}
         />
 
-        <input
-          className="input"
-          name="recorded_by"
-          placeholder="User ID"
-          value={form.recorded_by}
-          onChange={handleInput}
-        />
-
-        <button className="add-btn" onClick={addBlotter}>
+        {/* FIXED BUTTON */}
+        <button type="button" className="add-btn" onClick={addBlotter}>
           Add Blotter
         </button>
-       
       </div>
-       <button className="back-btn" onClick={() => navigate("/dashboard")}>
+
+      <button className="back-btn" onClick={() => navigate("/dashboard")}>
         Back to Dashboard
       </button>
     </div>

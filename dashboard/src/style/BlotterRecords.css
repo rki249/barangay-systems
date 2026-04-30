@@ -1,81 +1,215 @@
-/* Container */
+/* =========================
+   GLOBAL PAGE CONTAINER
+========================= */
+.household-page,
 .blotter-container {
-  max-width: 1000px;
-  margin: 30px auto;
-  padding: 20px;
-  font-family: Arial, sans-serif;
-  background: #f9fafb;
+  max-width: 1200px; /* reduced width (balanced look) */
+  margin: 0 auto;
+  padding: 25px;
+
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  background: #f1f5f9;
+  min-height: 100vh;
 }
 
-/* Title */
+/* =========================
+   TITLES
+========================= */
+.household-title,
 .title {
+  font-size: 30px;
+  font-weight: 800;
+  color: #0f172a;
+
   text-align: center;
-  color: #1f2937;
-  margin-bottom: 20px;
+  margin-bottom: 25px;
 }
 
-/* Table */
+/* =========================
+   LAYOUT
+========================= */
+.household-layout,
+.blotter-layout {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+  align-items: center;
+}
+
+/* =========================
+   TABLE WRAPPER
+========================= */
+.household-table-wrapper,
 .table-wrapper {
+  width: 100%;
+  background: #ffffff;
+
+  border-radius: 16px;
+  padding: 20px;
+
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+  border: 1px solid #e5e7eb;
+
   overflow-x: auto;
-  margin-bottom: 30px;
+  box-sizing: border-box;
 }
 
+/* =========================
+   TABLES
+========================= */
+.household-table,
 .blotter-table {
   width: 100%;
   border-collapse: collapse;
-  background: white;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  min-width: 700px;
 }
 
-.blotter-table th,
-.blotter-table td {
-  padding: 12px;
-  border-bottom: 1px solid #e5e7eb;
-  text-align: center;
-}
-
+/* HEADER */
+.household-table th,
 .blotter-table th {
-  background: #7c3aed;
+  background: linear-gradient(135deg, #3b82f6, #1d4ed8);
   color: white;
+
+  padding: 15px;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
-/* Form */
+/* CELLS */
+.household-table td,
+.blotter-table td {
+  padding: 14px;
+  text-align: center;
+
+  border-bottom: 1px solid #f1f5f9;
+  color: #334155;
+}
+
+/* ROW HOVER */
+.household-table tr:hover,
+.blotter-table tr:hover {
+  background: #f8fafc;
+  transition: 0.2s;
+}
+
+/* =========================
+   FORM CARD (UNIFIED)
+========================= */
+.household-form,
 .form-container {
-  background: white;
-  padding: 20px;
-  border-radius: 10px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  background: #ffffff;
+
+  padding: 35px 50px;
+
+  border-radius: 16px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+  border: 1px solid #e5e7eb;
+
+  width: 100%;
+  box-sizing: border-box;
 }
 
+/* FORM TITLE */
+.household-form h3,
+.form-container h3 {
+  text-align: center;
+
+  margin-bottom: 25px;
+
+  font-size: 20px;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+/* =========================
+   INPUTS
+========================= */
+.form-input,
 .input {
   width: 100%;
-  padding: 10px;
-  margin: 10px 0;
+  padding: 13px;
+
+  margin-bottom: 15px;
+
   border: 1px solid #d1d5db;
-  border-radius: 6px;
+  border-radius: 10px;
+
+  font-size: 14px;
+  box-sizing: border-box;
+
+  transition: all 0.2s ease;
 }
 
-/* Add button */
+.form-input:focus,
+.input:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+  outline: none;
+}
+
+/* =========================
+   ADD BUTTON
+========================= */
+.btn-add,
 .add-btn {
-  background: #22c55e;
-  color: white;
-  border: none;
-  padding: 10px 15px;
-  cursor: pointer;
-  border-radius: 6px;
+  width: 100%;
+  padding: 14px;
+
   margin-top: 10px;
+
+  background: linear-gradient(135deg, #22c55e, #16a34a);
+  color: white;
+
+  border: none;
+  border-radius: 10px;
+
+  font-weight: 700;
+  font-size: 15px;
+
+  cursor: pointer;
+  transition: 0.3s;
 }
 
+.btn-add:hover,
 .add-btn:hover {
-  background: #16a34a;
+  transform: translateY(-2px);
+  filter: brightness(1.1);
 }
 
-/* Status badges */
+/* =========================
+   DELETE BUTTON
+========================= */
+.btn-delete,
+.delete-btn {
+  background: #ef4444;
+  color: white;
+
+  border: none;
+  padding: 6px 12px;
+
+  border-radius: 8px;
+  cursor: pointer;
+
+  transition: 0.2s;
+}
+
+.btn-delete:hover,
+.delete-btn:hover {
+  background: #dc2626;
+  transform: scale(1.05);
+}
+
+/* =========================
+   STATUS BADGES
+========================= */
 .status {
-  padding: 5px 10px;
+  padding: 6px 12px;
   border-radius: 20px;
+
   font-size: 12px;
   font-weight: bold;
+  display: inline-block;
 }
 
 .status.pending {
@@ -91,4 +225,31 @@
 .status.active {
   background: #dbeafe;
   color: #1e3a8a;
+}
+
+/* =========================
+   BACK BUTTON
+========================= */
+.btn-back,
+.back-btn {
+  display: block;
+  margin: 35px auto;
+
+  background: #475569;
+  color: white;
+
+  border: none;
+  padding: 12px 28px;
+
+  border-radius: 10px;
+  font-weight: 600;
+
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.btn-back:hover,
+.back-btn:hover {
+  background: #334155;
+  transform: translateY(-2px);
 }

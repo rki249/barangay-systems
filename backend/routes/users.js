@@ -44,7 +44,6 @@ router.post("/", (req, res) => {
     );
 });
 
-// DELETE USER
 router.delete('/:id', (req, res) => {
     const id = req.params.id;
     const sql = 'DELETE FROM users WHERE user_id = ?';
