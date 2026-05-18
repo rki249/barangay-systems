@@ -66,4 +66,54 @@ router.post('/', (req, res) => {
   );
 });
 
+router.put('/:id', (req, res) => {
+  const id = req.params.id;
+  const {
+    complainant_id,
+    respondent_name,
+    incident_date,
+    incident_location,
+    complaint_details,
+    status,
+    recorded_by
+  } = req.body;
+
+  const sql = `
+    UPDATE blotter SET
+      complainant_id = ?,
+      respondent_name = ?,
+      incident_date = ?,
+      incident_location = ?,
+      complaint_details = ?,
+      status = ?,
+      recorded_by = ?
+    WHERE blotter_id = ?
+  `;
+
+  const complainantId = complainant_id ? Number(complainant_id) : null;
+  const recordedBy = recorded_by ? Number(recorded_by) : null;
+
+  db.query(
+    sql,
+    [
+      complainantId,
+      respondent_name,
+      incident_date,
+      incident_location,
+      complaint_details,
+      status,
+      recordedBy,
+      id
+    ],
+    (err, result) => {
+      if (err) {
+        console.log('UPDATE ERROR:', err);
+        return res.status(500).json(err);
+      }
+
+      res.json({ message: 'Blotter updated successfully' });
+    }
+  );
+});
+
 module.exports = router;

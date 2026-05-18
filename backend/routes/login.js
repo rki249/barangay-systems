@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const db = require("../db");
 
-// POST /api/login
+
 router.post("/", (req, res) => {
   const { username, password } = req.body;
 
@@ -14,10 +14,10 @@ router.post("/", (req, res) => {
     }
 
     if (result.length > 0) {
-      // Login successful
+     
       res.json({ message: "Login Successful", user: result[0] });
     } else {
-      // Login failed 
+  
       res.status(401).json({ message: "Invalid Username or Password" });
     }
   });

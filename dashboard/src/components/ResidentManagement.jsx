@@ -7,7 +7,11 @@ function ResidentManagement() {
   const navigate = useNavigate();
 
   const [residents, setResidents] = useState([]);
+  const [filteredResidents, setFilteredResidents] = useState([]);
   const [households, setHouseholds] = useState([]);
+  const [editingId, setEditingId] = useState(null);
+  const [editForm, setEditForm] = useState({});
+  const [searchTerm, setSearchTerm] = useState("");
 
   const [form, setForm] = useState({
     first_name: "",
@@ -17,15 +21,33 @@ function ResidentManagement() {
     household_id: ""
   });
 
+  const formatDateForInput = (dateValue) => {
+    if (!dateValue) return "";
+    return dateValue.toString().slice(0, 10);
+  };
+
   // FETCH RESIDENTS
   const fetchResidents = async () => {
     try {
       const res = await axios.get("http://localhost:5000/api/residents");
       setResidents(res.data);
+      setFilteredResidents(applySearch(res.data, searchTerm));
     } catch (err) {
       console.error("❌ FETCH ERROR:", err);
       alert("Failed to fetch residents. Check backend.");
     }
+  };
+
+  const applySearch = (list, term) => {
+    const normalized = term?.toLowerCase().trim();
+    if (!normalized) return list;
+
+    return list.filter((resident) =>
+      resident.resident_id?.toString().includes(normalized) ||
+      resident.household_id?.toString().includes(normalized) ||
+      resident.first_name?.toLowerCase().includes(normalized) ||
+      resident.last_name?.toLowerCase().includes(normalized)
+    );
   };
 
   const fetchHouseholds = async () => {
@@ -43,9 +65,20 @@ function ResidentManagement() {
     fetchHouseholds();
   }, []);
 
+  const handleSearch = (e) => {
+    const term = e.target.value;
+    setSearchTerm(term);
+    setFilteredResidents(applySearch(residents, term));
+  };
+
   // HANDLE INPUT
   const handleInput = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
+  };
+
+  // HANDLE EDIT INPUT
+  const handleEditInput = (e) => {
+    setEditForm({ ...editForm, [e.target.name]: e.target.value });
   };
 
   // ADD RESIDENT
@@ -99,6 +132,69 @@ function ResidentManagement() {
     }
   };
 
+  // EDIT RESIDENT
+  const handleEdit = (resident) => {
+    setEditingId(resident.resident_id);
+    setEditForm({
+      first_name: resident.first_name || "",
+      last_name: resident.last_name || "",
+      sex: resident.sex || "",
+      birthdate: formatDateForInput(resident.birthdate),
+      household_id: resident.household_id || ""
+    });
+  };
+
+  // SAVE EDIT
+  const handleSaveEdit = async (resident) => {
+    try {
+      const payload = {};
+
+      if (editForm.first_name !== (resident.first_name || "")) {
+        payload.first_name = editForm.first_name;
+      }
+
+      if (editForm.last_name !== (resident.last_name || "")) {
+        payload.last_name = editForm.last_name;
+      }
+
+      if (editForm.sex !== (resident.sex || "")) {
+        payload.sex = editForm.sex;
+      }
+
+      if (editForm.birthdate !== formatDateForInput(resident.birthdate)) {
+        payload.birthdate = editForm.birthdate;
+      }
+
+      if (Number(editForm.household_id) !== Number(resident.household_id)) {
+        payload.household_id = Number(editForm.household_id);
+      }
+
+      if (Object.values(payload).some((value) => value === "" || Number.isNaN(value))) {
+        alert("Please fill the field you changed");
+        return;
+      }
+
+      if (Object.keys(payload).length === 0) {
+        alert("No changes to save");
+        return;
+      }
+
+      await axios.put(`http://localhost:5000/api/residents/${resident.resident_id}`, payload);
+      alert("Resident updated successfully!");
+      setEditingId(null);
+      fetchResidents();
+    } catch (err) {
+      console.error("❌ UPDATE ERROR:", err);
+      alert("Failed to update resident");
+    }
+  };
+
+  // CANCEL EDIT
+  const handleCancelEdit = () => {
+    setEditingId(null);
+    setEditForm({});
+  };
+
   // DELETE RESIDENT
   const deleteResident = async (id) => {
     try {
@@ -113,6 +209,17 @@ function ResidentManagement() {
   return (
     <div className="resident-container">
       <h2 className="title">Resident Management</h2>
+
+      {/* SEARCH BAR */}
+      <div className="search-bar-container">
+        <input
+          type="text"
+          className="search-bar"
+          placeholder="🔍 Search by name, ID, or household..."
+          value={searchTerm}
+          onChange={handleSearch}
+        />
+      </div>
 
       {/* TABLE */}
       <div className="table-wrapper">
@@ -129,20 +236,125 @@ function ResidentManagement() {
           </thead>
 
           <tbody>
-            {residents.map((r) => (
+            {filteredResidents.map((r) => (
               <tr key={r.resident_id}>
                 <td>{r.resident_id}</td>
-                <td>{`${r.first_name || ''} ${r.last_name || ''}`.trim()}</td>
-                <td>{r.birthdate}</td>
-                <td>{r.sex}</td>
-                <td>{r.household_id}</td>
                 <td>
-                  <button
-                    className="delete-btn"
-                    onClick={() => deleteResident(r.resident_id)}
-                  >
-                    Delete
-                  </button>
+                  {editingId === r.resident_id ? (
+                    <>
+                      <input
+                        type="text"
+                        name="first_name"
+                        value={editForm.first_name}
+                        onChange={handleEditInput}
+                        style={{ marginRight: "5px", width: "45%" }}
+                      />
+                      <input
+                        type="text"
+                        name="last_name"
+                        value={editForm.last_name}
+                        onChange={handleEditInput}
+                        style={{ width: "45%" }}
+                      />
+                    </>
+                  ) : (
+                    `${r.first_name || ''} ${r.last_name || ''}`.trim()
+                  )}
+                </td>
+                <td>
+                  {editingId === r.resident_id ? (
+                    <input
+                      type="date"
+                      name="birthdate"
+                      value={editForm.birthdate}
+                      onChange={handleEditInput}
+                    />
+                  ) : (
+                    r.birthdate
+                  )}
+                </td>
+                <td>
+                  {editingId === r.resident_id ? (
+                    <select
+                      name="sex"
+                      value={editForm.sex}
+                      onChange={handleEditInput}
+                    >
+                      <option value="">Select</option>
+                      <option value="Male">Male</option>
+                      <option value="Female">Female</option>
+                    </select>
+                  ) : (
+                    r.sex
+                  )}
+                </td>
+                <td>
+                  {editingId === r.resident_id ? (
+                    <select
+                      name="household_id"
+                      value={editForm.household_id}
+                      onChange={handleEditInput}
+                    >
+                      <option value="">Select</option>
+                      {households.map((h) => (
+                        <option key={h.household_id} value={h.household_id}>
+                          {h.household_id}
+                        </option>
+                      ))}
+                    </select>
+                  ) : (
+                    r.household_id
+                  )}
+                </td>
+                <td>
+                  {editingId === r.resident_id ? (
+                    <>
+                      <button
+                        type="button"
+                        className="save-btn"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          handleSaveEdit(r);
+                        }}
+                      >
+                        Save
+                      </button>
+                      <button
+                        type="button"
+                        className="cancel-btn"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          handleCancelEdit();
+                        }}
+                      >
+                        Cancel
+                      </button>
+                    </>
+                  ) : (
+                    <>
+                      <button
+                        type="button"
+                        className="edit-btn"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          handleEdit(r);
+                        }}
+                      >
+                        Edit
+                      </button>
+                      <button
+                        type="button"
+                        className="delete-btn"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          if (!window.confirm('Delete this resident?')) return;
+                          deleteResident(r.resident_id);
+                        }}
+                      >
+                        Delete
+                      </button>
+                    </>
+                  )}
                 </td>
               </tr>
             ))}
@@ -206,12 +418,18 @@ function ResidentManagement() {
           ))}
         </select>
 
-        <button className="add-btn" onClick={addResident}>
+        <button type="button" className="add-btn" onClick={(e) => {
+          e.preventDefault();
+          addResident();
+        }}>
           Add Resident
         </button>
       </div>
 
-      <button className="back-btn" onClick={() => navigate("/dashboard")}>
+      <button type="button" className="back-btn" onClick={(e) => {
+        e.preventDefault();
+        navigate("/dashboard");
+      }}>
         Back to Dashboard
       </button>
     </div>

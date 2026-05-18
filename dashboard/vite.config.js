@@ -6,6 +6,7 @@ export default defineConfig({
   plugins: [react()],
   server: {
     host: true,
+    allowedHosts: ['crook-zodiac-acuteness.ngrok-free.dev'],
     proxy: {
       '/api': {
         target: 'http://localhost:5000',

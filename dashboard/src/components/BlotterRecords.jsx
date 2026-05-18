@@ -7,7 +7,11 @@ function BlotterRecords() {
   const navigate = useNavigate();
 
   const [records, setRecords] = useState([]);
+  const [filteredRecords, setFilteredRecords] = useState([]);
   const [residents, setResidents] = useState([]);
+  const [editingId, setEditingId] = useState(null);
+  const [editStatus, setEditStatus] = useState("");
+  const [searchTerm, setSearchTerm] = useState("");
 
   const [form, setForm] = useState({
     complainant_id: "",
@@ -19,11 +23,27 @@ function BlotterRecords() {
     recorded_by: ""
   });
 
+  const applySearch = (list, term) => {
+    const normalized = term?.toLowerCase().trim();
+    if (!normalized) return list;
+
+    return list.filter(
+      (record) =>
+        record.complainant_name?.toLowerCase().includes(normalized) ||
+        record.respondent_name?.toLowerCase().includes(normalized) ||
+        record.blotter_id?.toString().includes(normalized) ||
+        record.incident_location?.toLowerCase().includes(normalized) ||
+        record.complaint_details?.toLowerCase().includes(normalized) ||
+        record.status?.toLowerCase().includes(normalized)
+    );
+  };
+
   // GET BLOTTERS
   const fetchData = async () => {
     try {
       const res = await axios.get("http://localhost:5000/api/blotters");
       setRecords(res.data);
+      setFilteredRecords(applySearch(res.data, searchTerm));
     } catch (error) {
       console.error("Error fetching blotters:", error);
     }
@@ -43,6 +63,13 @@ function BlotterRecords() {
     fetchData();
     fetchResidents();
   }, []);
+
+  // SEARCH FILTER
+  const handleSearch = (e) => {
+    const term = e.target.value;
+    setSearchTerm(term);
+    setFilteredRecords(applySearch(records, term));
+  };
 
   // INPUT HANDLER
   const handleInput = (e) =>
@@ -83,9 +110,50 @@ function BlotterRecords() {
     }
   };
 
+  // EDIT STATUS
+  const handleEditStatus = (blotterId, currentStatus) => {
+    setEditingId(blotterId);
+    setEditStatus(currentStatus);
+  };
+
+  // SAVE STATUS EDIT
+  const handleSaveStatus = async (blotterId) => {
+    try {
+      const blotter = records.find(r => r.blotter_id === blotterId);
+      await axios.put(`http://localhost:5000/api/blotters/${blotterId}`, {
+        ...blotter,
+        status: editStatus
+      });
+      
+      alert("Status updated successfully!");
+      setEditingId(null);
+      fetchData();
+    } catch (error) {
+      console.error("Error updating status:", error);
+      alert("Failed to update status.");
+    }
+  };
+
+  // CANCEL EDIT
+  const handleCancelEdit = () => {
+    setEditingId(null);
+    setEditStatus("");
+  };
+
   return (
     <div className="blotter-container">
       <h2 className="title">Blotter Records</h2>
+
+      {/* SEARCH BAR */}
+      <div className="search-bar-container">
+        <input
+          type="text"
+          className="search-bar"
+          placeholder="🔍 Search by name, ID or location..."
+          value={searchTerm}
+          onChange={handleSearch}
+        />
+      </div>
 
       {/* TABLE */}
       <div className="table-wrapper">
@@ -98,11 +166,12 @@ function BlotterRecords() {
               <th>Date</th>
               <th>Location</th>
               <th>Status</th>
+              <th>Action</th>
             </tr>
           </thead>
 
           <tbody>
-            {records.map((r) => (
+            {filteredRecords.map((r) => (
               <tr key={r.blotter_id}>
                 <td>{r.blotter_id}</td>
                 <td>{r.complainant_name}</td>
@@ -110,17 +179,62 @@ function BlotterRecords() {
                 <td>{r.incident_date}</td>
                 <td>{r.incident_location}</td>
                 <td>
-                  <span
-                    className={`status ${
-                      r.status === "Pending"
-                        ? "pending"
-                        : r.status === "Resolved"
-                        ? "resolved"
-                        : "active"
-                    }`}
-                  >
-                    {r.status}
-                  </span>
+                  {editingId === r.blotter_id ? (
+                    <select value={editStatus} onChange={(e) => setEditStatus(e.target.value)}>
+                      <option value="Pending">Pending</option>
+                      <option value="Active">Active</option>
+                      <option value="Resolved">Resolved</option>
+                    </select>
+                  ) : (
+                    <span
+                      className={`status ${
+                        r.status === "Pending"
+                          ? "pending"
+                          : r.status === "Resolved"
+                          ? "resolved"
+                          : "active"
+                      }`}
+                    >
+                      {r.status}
+                    </span>
+                  )}
+                </td>
+                <td>
+                  {editingId === r.blotter_id ? (
+                    <>
+                      <button 
+                        type="button"
+                        className="save-btn" 
+                        onClick={(e) => {
+                          e.preventDefault();
+                          handleSaveStatus(r.blotter_id);
+                        }}
+                      >
+                        Save
+                      </button>
+                      <button 
+                        type="button"
+                        className="cancel-btn" 
+                        onClick={(e) => {
+                          e.preventDefault();
+                          handleCancelEdit();
+                        }}
+                      >
+                        Cancel
+                      </button>
+                    </>
+                  ) : (
+                    <button 
+                      type="button"
+                      className="edit-btn"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        handleEditStatus(r.blotter_id, r.status);
+                      }}
+                    >
+                      Edit
+                    </button>
+                  )}
                 </td>
               </tr>
             ))}
@@ -185,7 +299,10 @@ function BlotterRecords() {
         </button>
       </div>
 
-      <button className="back-btn" onClick={() => navigate("/dashboard")}>
+<button type="button" className="back-btn" onClick={(e) => {
+        e.preventDefault();
+        navigate("/dashboard");
+      }}>
         Back to Dashboard
       </button>
     </div>
